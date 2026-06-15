@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Decisión PIV - Zonas Naranjas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           VARIABLES Y DISEÑO BASE (FONDO NARANJA)
+        ========================================= */
+        :root {
+            --bg-color: #FF6600; /* Fondo naranja de la campaña */
+            --bg-pattern: rgba(255, 255, 255, 0.15);
+            --blue-corp: #00529B; /* Azul institucional */
+            --blue-dark: #0B1120;
+            --yellow-accent: #FFD700;
+            --safe-color: #28a745;
+            --unsafe-color: #dc3545;
+            --text-light: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            /* Patrón de puntos para darle textura corporativa */
+            background-image: radial-gradient(var(--bg-pattern) 2px, transparent 2px);
+            background-size: 25px 25px;
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Evita scroll en tablets */
+        }
+
+        /* =========================================
+           PANTALLAS (INICIO, FIN)
+        ========================================= */
+        .screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Fondo naranja oscuro semitransparente para los menús */
+            background: rgba(204, 82, 0, 0.95);
+            z-index: 2000;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .screen.hidden {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .title-main {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            text-align: center;
+            margin: 0;
+            line-height: 1.1;
+            text-shadow: 3px 3px 0px var(--blue-corp);
+        }
+
+        .title-sub {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--blue-dark);
+            font-size: 2rem;
+            margin-top: 5px;
+            margin-bottom: 30px;
+            background-color: var(--yellow-accent);
+            padding: 5px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .btn-start {
+            background-color: var(--blue-corp);
+            color: var(--text-light);
+            border: 3px solid var(--text-light);
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0, 82, 155, 0.5);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            background-color: var(--blue-dark);
+        }
+
+        /* =========================================
+           INTERFAZ DEL JUEGO (HEADER)
+        ========================================= */
+        .game-header {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .lives { color: #FFFFFF; font-size: 1.5rem; }
+        .score { color: var(--blue-dark); background: var(--yellow-accent); padding: 5px 15px; border-radius: 20px; text-shadow: none;}
+
+        /* =========================================
+           CONTENEDOR DE TARJETAS Y BARRA DE TIEMPO
+        ========================================= */
+        .game-area {
+            flex: 1;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .timer-container {
+            width: 90%;
+            height: 12px;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background-color: var(--text-light);
+            transition: width 0.1s linear, background-color 0.3s;
+        }
+
+        .timer-bar.warning { background-color: var(--yellow-accent); }
+        .timer-bar.danger { background-color: var(--unsafe-color); }
+
+        /* =========================================
+           LA TARJETA (ESTILO TINDER)
+        ========================================= */
+        .card-container {
+            width: 90%;
+            height: 350px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .swipe-card {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border-radius: 20px;
+            position: absolute;
+            top: 0; left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            color: #333;
+            /* Transiciones muy suaves para el movimiento */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+            transform-origin: bottom center;
+        }
+
+        .swipe-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--blue-corp);
+            line-height: 1.3;
+        }
+
+        .swipe-card .icon-placeholder {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* Animaciones de Salida */
+        .swipe-left { transform: translateX(-150%) rotate(-20deg); opacity: 0; }
+        .swipe-right { transform: translateX(150%) rotate(20deg); opacity: 0; }
+        .swipe-down { transform: translateY(150%) rotate(10deg); opacity: 0; }
+
+        /* =========================================
+           CONTROLES (BOTONES)
+        ========================================= */
+        .controls {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-around;
+            padding: 30px 0;
+        }
+
+        .btn-action {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            border: none;
+            font-size: 2.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.1s, background-color 0.2s;
+            background-color: #FFFFFF;
+        }
+
+        .btn-action:active { transform: scale(0.9); }
+
+        .btn-unsafe { border: 5px solid var(--unsafe-color); color: var(--unsafe-color); }
+        .btn-safe { border: 5px solid var(--safe-color); color: var(--safe-color); }
+
+        /* Iconos para Feedback flotante */
+        .feedback-icon {
+            position: absolute;
+            font-size: 6rem;
+            opacity: 0;
+            z-index: 100;
+            transition: opacity 0.3s, transform 0.5s;
+            pointer-events: none;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+        }
+        .feedback-icon.show {
+            opacity: 1;
+            transform: scale(1.5) translateY(-50px);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE INICIO -->
+    <div class="screen" id="screen-start">
+        <h1 class="title-main">DECISIÓN PIV</h1>
+        <p class="title-sub">ZONAS NARANJAS</p>
+        <p style="text-align: center; max-width: 320px; margin-bottom: 30px; line-height: 1.5; font-size: 1.2rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
+            Evalúa la situación.<br> Tienes <strong>10 segundos</strong> para decidir si la acción es correcta o representa un riesgo.
+        </p>
+        <button class="btn-start" onclick="initGame()">Comenzar Turno</button>
+    </div>
+
+    <!-- PANTALLA DE FIN -->
+    <div class="screen hidden" id="screen-end">
+        <h1 class="title-main" id="end-title">¡TIEMPO!</h1>
+        <p class="title-sub" id="end-score" style="background-color: var(--text-light);">Puntuación: 0</p>
+        <button class="btn-start" onclick="document.getElementById('screen-end').classList.add('hidden'); document.getElementById('screen-start').classList.remove('hidden');">Jugar de Nuevo</button>
+    </div>
+
+    <!-- UI DEL JUEGO -->
+    <div class="game-header">
+        <div class="score">PUNTOS: <span id="score-display">0</span></div>
+        <div class="lives" id="lives-display">❤️❤️❤️</div>
+    </div>
+
+    <div class="game-area">
+        <!-- Barra de Tiempo -->
+        <div class="timer-container">
+            <div class="timer-bar" id="timer-bar"></div>
+        </div>
+
+        <!-- Feedback visual (Palomita/Tache flotante) -->
+        <div id="feedback-icon" class="feedback-icon"></div>
+
+        <!-- Contenedor de la Tarjeta Actual -->
+        <div class="card-container" id="card-container">
+            <!-- La tarjeta se inyecta por JS -->
+        </div>
+    </div>
+
+    <!-- BOTONES DE DECISIÓN -->
+    <div class="controls">
+        <button class="btn-action btn-unsafe" onclick="handleDecision(false)">❌</button>
+        <button class="btn-action btn-safe" onclick="handleDecision(true)">✅</button>
+    </div>
+
+    <script>
+        // =========================================
+        // BASE DE DATOS DE SITUACIONES (40 Preguntas)
+        // =========================================
+        const allSituations = [
+            // SEGURAS (✅)
+            { text: "Hacer contacto visual con el operador antes de cruzar.", isSafe: true },
+            { text: "Peatón esperando detrás de la línea amarilla marcada.", isSafe: true },
+            { text: "Operador de PIV tocando el claxon en una intersección.", isSafe: true },
+            { text: "Traer puesto el chaleco naranja dentro de la planta.", isSafe: true },
+            { text: "Respetar la distancia de 1 metro al caminar junto a la línea.", isSafe: true },
+            { text: "Ceder el paso al montacargas en áreas no peatonales.", isSafe: true },
+            { text: "Usar el claxon al salir de un pasillo ciego.", isSafe: true },
+            { text: "Detenerse completamente en los cruces peatonales.", isSafe: true },
+            { text: "Usar los espejos cóncavos para verificar intersecciones.", isSafe: true },
+            { text: "Usar zapatos de seguridad con casquillo en el área.", isSafe: true },
+            { text: "Reportar de inmediato una barrera de seguridad dañada.", isSafe: true },
+            { text: "Caminar estrictamente por las rutas designadas en el layout.", isSafe: true },
+            { text: "Respetar el límite de velocidad de 10 km/h en pasillos.", isSafe: true },
+            { text: "Realizar inspección pre-operacional del montacargas.", isSafe: true },
+            { text: "Mantener el área de los extintores libre de obstáculos.", isSafe: true },
+            { text: "Conducir en reversa si la carga obstruye la visibilidad frontal.", isSafe: true },
+            { text: "Descender del PIV usando tres puntos de apoyo.", isSafe: true },
+            { text: "Mantener los conos de seguridad en su posición designada.", isSafe: true },
+            { text: "Estacionar el PIV con las cuchillas a ras de suelo.", isSafe: true },
+            { text: "Usar lentes de seguridad en toda la Zona Naranja.", isSafe: true },
+
+            // INSEGURAS (❌)
+            { text: "Caminar por el pasillo hablando por el celular.", isSafe: false },
+            { text: "Correr para ganarle el paso al montacargas.", isSafe: false },
+            { text: "Caminar por el almacén fuera de las cebras peatonales.", isSafe: false },
+            { text: "Montacargas avanzando con las cuchillas elevadas.", isSafe: false },
+            { text: "Cruzar la Zona Naranja con audífonos puestos escuchando música.", isSafe: false },
+            { text: "Conducir el PIV a exceso de velocidad en el almacén.", isSafe: false },
+            { text: "Caminar leyendo documentos o revisando una tablet.", isSafe: false },
+            { text: "Operar un montacargas sin abrocharse el cinturón de seguridad.", isSafe: false },
+            { text: "Mantener las manos en los bolsillos al subir escaleras.", isSafe: false },
+            { text: "Transportar a un compañero en las cuchillas del montacargas.", isSafe: false },
+            { text: "Ignorar la señal de 'Alto' porque no se escucha ruido de motores.", isSafe: false },
+            { text: "Dejar el montacargas encendido y sin freno al bajarse.", isSafe: false },
+            { text: "Distraer al operador del PIV mientras está en movimiento.", isSafe: false },
+            { text: "Levantar cargas que superan la capacidad nominal del equipo.", isSafe: false },
+            { text: "Pasar caminando por debajo de una carga suspendida.", isSafe: false },
+            { text: "Bajar del montacargas dando un salto directamente al piso.", isSafe: false },
+            { text: "Almacenar materiales bloqueando temporalmente las salidas de emergencia.", isSafe: false },
+            { text: "Rebasar a otro montacargas dentro de un pasillo estrecho.", isSafe: false },
+            { text: "Usar el celular en la cabina del PIV mientras se conduce.", isSafe: false },
+            { text: "Levantar a un peatón en un pallet para que alcance un rack.", isSafe: false }
+        ];
+
+        // Variables de estado
+        let currentQueue = [];
+        let currentCardData = null;
+        let score = 0;
+        let lives = 3;
+        let timer = 10000; // 10 segundos
+        let timerInterval;
+        let isProcessing = false; 
+
+        // Elementos del DOM
+        const cardContainer = document.getElementById('card-container');
+        const timerBar = document.getElementById('timer-bar');
+        const scoreDisplay = document.getElementById('score-display');
+        const livesDisplay = document.getElementById('lives-display');
+        const feedbackIcon = document.getElementById('feedback-icon');
+
+        // =========================================
+        // INICIO DEL JUEGO
+        // =========================================
+        function initGame() {
+            document.getElementById('screen-start').classList.add('hidden');
+            score = 0;
+            lives = 3;
+            updateUI();
+            
+            // Barajear todas las preguntas
+            currentQueue = [...allSituations].sort(() => Math.random() - 0.5);
+            nextCard();
+        }
+
+        // =========================================
+        // LÓGICA DE TARJETAS
+        // =========================================
+        function nextCard() {
+            if (lives <= 0) {
+                endGame("¡FIN DEL TURNO!");
+                return;
+            }
+            if (currentQueue.length === 0) {
+                endGame("¡OBJETIVO CUMPLIDO!");
+                return;
+            }
+
+            isProcessing = false;
+            currentCardData = currentQueue.pop();
+
+            // Crear tarjeta
+            cardContainer.innerHTML = '';
+            const cardEl = document.createElement('div');
+            cardEl.className = 'swipe-card';
+            cardEl.id = 'active-card';
+            
+            cardEl.innerHTML = `
+                <div class="icon-placeholder">🚧</div>
+                <h3>${currentCardData.text}</h3>
+            `;
+            
+            cardContainer.appendChild(cardEl);
+            startTimer();
+        }
+
+        // =========================================
+        // TEMPORIZADOR
+        // =========================================
+        function startTimer() {
+            clearInterval(timerInterval);
+            timer = 10000;
+            timerBar.style.width = '100%';
+            timerBar.className = 'timer-bar'; 
+
+            const tickRate = 20; 
+
+            timerInterval = setInterval(() => {
+                timer -= tickRate;
+                const percentage = (timer / 10000) * 100;
+                timerBar.style.width = percentage + '%';
+
+                if (percentage < 50 && percentage > 20) timerBar.className = 'timer-bar warning';
+                if (percentage <= 20) timerBar.className = 'timer-bar danger';
+
+                if (timer <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeOut();
+                }
+            }, tickRate);
+        }
+
+        // =========================================
+        // DECISIONES Y ANIMACIONES
+        // =========================================
+        function handleDecision(userThinksSafe) {
+            if (isProcessing) return;
+            isProcessing = true;
+            clearInterval(timerInterval);
+
+            const activeCard = document.getElementById('active-card');
+            const isCorrect = (userThinksSafe === currentCardData.isSafe);
+
+            if (userThinksSafe) {
+                activeCard.classList.add('swipe-right');
+            } else {
+                activeCard.classList.add('swipe-left');
+            }
+
+            processResult(isCorrect);
+        }
+
+        function handleTimeOut() {
+            if (isProcessing) return;
+            isProcessing = true;
+            
+            const activeCard = document.getElementById('active-card');
+            activeCard.classList.add('swipe-down'); 
+            
+            processResult(false); 
+        }
+
+        function processResult(isCorrect) {
+            feedbackIcon.innerText = isCorrect ? '✅' : '❌';
+            feedbackIcon.style.color = isCorrect ? 'var(--safe-color)' : 'var(--unsafe-color)';
+            feedbackIcon.classList.add('show');
+
+            if (isCorrect) {
+                score += 100;
+            } else {
+                lives--;
+            }
+
+            updateUI();
+
+            setTimeout(() => {
+                feedbackIcon.classList.remove('show');
+                nextCard();
+            }, 500);
+        }
+
+        // =========================================
+        // ACTUALIZACIÓN UI Y FIN DEL JUEGO
+        // =========================================
+        function updateUI() {
+            scoreDisplay.innerText = score;
+            let hearts = '';
+            for(let i = 0; i < lives; i++) hearts += '❤️';
+            livesDisplay.innerText = hearts;
+        }
+
+        function endGame(titleText) {
+            clearInterval(timerInterval);
+            document.getElementById('end-title').innerText = titleText;
+            document.getElementById('end-score').innerText = `Puntuación: ${score}`;
+            document.getElementById('screen-end').classList.remove('hidden');
+        }
+
+    </script>
+</body>
+</html>
