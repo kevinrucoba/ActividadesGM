@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zonas Naranjas - Hub de Juegos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           VARIABLES Y DISEÑO BASE
+        ========================================= */
+        :root {
+            --bg-color: #0B1120; /* Azul marino profundo */
+            --bg-pattern: rgba(255, 255, 255, 0.05);
+            --blue-corp: #00529B; /* Azul institucional */
+            --orange-alert: #FF6600; /* Naranja campaña */
+            --yellow-accent: #FFD700;
+            --text-light: #FFFFFF;
+            --text-gray: #E0E0E0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--bg-pattern) 2px, transparent 2px);
+            background-size: 30px 30px;
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* =========================================
+           ENCABEZADO
+        ========================================= */
+        header {
+            text-align: center;
+            margin-top: 60px;
+            margin-bottom: 50px;
+            padding: 0 20px;
+        }
+
+        .highlight-box {
+            display: inline-block;
+            background-color: var(--yellow-accent);
+            width: 60px;
+            height: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .title-main {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .title-sub {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--orange-alert);
+            font-size: 2rem;
+            margin-top: 10px;
+            margin-bottom: 0;
+            text-transform: uppercase;
+        }
+
+        .description {
+            color: var(--text-gray);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 20px auto 0 auto;
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           GRID DE JUEGOS (MENÚ)
+        ========================================= */
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1200px;
+            padding: 20px;
+            margin-bottom: 60px;
+        }
+
+        .game-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 3px solid var(--blue-corp);
+            border-top: 15px solid var(--orange-alert);
+            border-radius: 15px;
+            width: 300px;
+            padding: 30px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-light);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 102, 0, 0.3);
+            background-color: rgba(0, 82, 155, 0.2); /* Fondo ligeramente azul al pasar el mouse */
+            border-color: var(--orange-alert);
+        }
+
+        .game-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+
+        .game-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            margin: 0 0 15px 0;
+            color: var(--yellow-accent);
+        }
+
+        .game-desc {
+            font-size: 1rem;
+            color: var(--text-gray);
+            line-height: 1.4;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        .btn-play {
+            background-color: var(--orange-alert);
+            color: var(--text-light);
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.2s;
+            display: inline-block;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .game-card:hover .btn-play {
+            background-color: var(--yellow-accent);
+            color: var(--bg-color);
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+        @media (max-width: 768px) {
+            .title-main { font-size: 3rem; }
+            .title-sub { font-size: 1.5rem; }
+            .game-card { width: 100%; max-width: 350px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="highlight-box"></div>
+        <h1 class="title-main">ZONAS NARANJAS</h1>
+        <h2 class="title-sub">Interactivo PIV</h2>
+        <p class="description">Selecciona una de las dinámicas de capacitación para fortalecer la seguridad en planta. Tu participación es clave para prevenir incidentes.</p>
+    </header>
+
+    <main class="menu-container">
+        
+        <!-- TARJETA 1: MEMORAMA -->
+        <!-- El href apunta a la carpeta "MemoramaSeguridad" -->
+        <a href="/MemoramaSeguridad/memoramaComitePIV.html" class="game-card">
+            <div class="game-icon">🎴</div>
+            <h3 class="game-title">Memorama</h3>
+            <p class="game-desc">Encuentra los pares y familiarízate con los elementos de seguridad y prevención de las Zonas Naranjas.</p>
+            <div class="btn-play">Iniciar</div>
+        </a>
+
+        <!-- TARJETA 2: DECISIÓN PIV -->
+        <!-- El href apunta a la carpeta "Decision PIV" -->
+        <a href="/DecisionPIV/juego.html" class="game-card">
+            <div class="game-icon">⏱️</div>
+            <h3 class="game-title">Decisión PIV</h3>
+            <p class="game-desc">Evalúa situaciones de riesgo en piso. Tienes solo 10 segundos para decidir si la acción es Segura o Insegura.</p>
+            <div class="btn-play">Iniciar</div>
+        </a>
+
+        <!-- TARJETA 3: CRUCE SEGURO -->
+        <!-- El href apunta a la carpeta "Cruce Seguro" -->
+        <a href="/Cruce Seguro/juego.html" class="game-card">
+            <div class="game-icon">🚧</div>
+            <h3 class="game-title">Cruce Seguro</h3>
+            <p class="game-desc">Navega por el almacén utilizando únicamente las rutas peatonales y haciendo contacto visual con los operadores.</p>
+            <div class="btn-play">Iniciar</div>
+        </a>
+
+    </main>
+
+</body>
+</html>

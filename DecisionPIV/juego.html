@@ -247,9 +247,40 @@
             transform: scale(1.5) translateY(-50px);
         }
 
+        /* =========================================
+           BOTÓN FLOTANTE: VOLVER AL MENÚ
+        ========================================= */
+        .btn-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #00529B; /* Azul corporativo */
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            z-index: 9999; /* Asegura que siempre esté por encima de todo */
+            transition: transform 0.2s, background-color 0.2s;
+            border: 2px solid #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-home:hover {
+            transform: scale(1.05);
+            background-color: #FF6600; /* Naranja campaña */
+        }
     </style>
 </head>
 <body>
+    <!-- BOTÓN REGRESAR AL MENÚ -->
+    <a href="/MemoramaSeguridad/menu.html" class="btn-home">⬅️ Menú Principal</a>
 
     <!-- PANTALLA DE INICIO -->
     <div class="screen" id="screen-start">
