@@ -284,7 +284,7 @@
 
     <!-- PANTALLA DE INICIO -->
     <div class="screen" id="screen-start">
-        <h1 class="title-main">DECISIÓN PIV</h1>
+        <h1 class="title-main">DECISIÓN EQUIPO MOVIL</h1>
         <p class="title-sub">ZONAS NARANJAS</p>
         <p style="text-align: center; max-width: 320px; margin-bottom: 30px; line-height: 1.5; font-size: 1.2rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
             Evalúa la situación.<br> Tienes <strong>10 segundos</strong> para decidir si la acción es correcta o representa un riesgo.
@@ -334,7 +334,7 @@
             // SEGURAS (✅)
             { text: "Hacer contacto visual con el operador antes de cruzar.", isSafe: true },
             { text: "Peatón esperando detrás de la línea amarilla marcada.", isSafe: true },
-            { text: "Operador de PIV tocando el claxon en una intersección.", isSafe: true },
+            { text: "Operador de Equipo Móvil tocando el claxon en una intersección.", isSafe: true },
             { text: "Traer puesto el chaleco naranja dentro de la planta.", isSafe: true },
             { text: "Respetar la distancia de 1 metro al caminar junto a la línea.", isSafe: true },
             { text: "Ceder el paso al montacargas en áreas no peatonales.", isSafe: true },
@@ -348,9 +348,9 @@
             { text: "Realizar inspección pre-operacional del montacargas.", isSafe: true },
             { text: "Mantener el área de los extintores libre de obstáculos.", isSafe: true },
             { text: "Conducir en reversa si la carga obstruye la visibilidad frontal.", isSafe: true },
-            { text: "Descender del PIV usando tres puntos de apoyo.", isSafe: true },
+            { text: "Descender del Equipo Móvil usando tres puntos de apoyo.", isSafe: true },
             { text: "Mantener los conos de seguridad en su posición designada.", isSafe: true },
-            { text: "Estacionar el PIV con las cuchillas a ras de suelo.", isSafe: true },
+            { text: "Estacionar el Equipo Móvil con las cuchillas a ras de suelo.", isSafe: true },
             { text: "Usar lentes de seguridad en toda la Zona Naranja.", isSafe: true },
 
             // INSEGURAS (❌)
@@ -359,20 +359,20 @@
             { text: "Caminar por el almacén fuera de las cebras peatonales.", isSafe: false },
             { text: "Montacargas avanzando con las cuchillas elevadas.", isSafe: false },
             { text: "Cruzar la Zona Naranja con audífonos puestos escuchando música.", isSafe: false },
-            { text: "Conducir el PIV a exceso de velocidad en el almacén.", isSafe: false },
+            { text: "Conducir el Equipo Móvil a exceso de velocidad en el almacén.", isSafe: false },
             { text: "Caminar leyendo documentos o revisando una tablet.", isSafe: false },
             { text: "Operar un montacargas sin abrocharse el cinturón de seguridad.", isSafe: false },
             { text: "Mantener las manos en los bolsillos al subir escaleras.", isSafe: false },
             { text: "Transportar a un compañero en las cuchillas del montacargas.", isSafe: false },
             { text: "Ignorar la señal de 'Alto' porque no se escucha ruido de motores.", isSafe: false },
             { text: "Dejar el montacargas encendido y sin freno al bajarse.", isSafe: false },
-            { text: "Distraer al operador del PIV mientras está en movimiento.", isSafe: false },
+            { text: "Distraer al operador del Equipo Móvil mientras está en movimiento.", isSafe: false },
             { text: "Levantar cargas que superan la capacidad nominal del equipo.", isSafe: false },
             { text: "Pasar caminando por debajo de una carga suspendida.", isSafe: false },
             { text: "Bajar del montacargas dando un salto directamente al piso.", isSafe: false },
             { text: "Almacenar materiales bloqueando temporalmente las salidas de emergencia.", isSafe: false },
             { text: "Rebasar a otro montacargas dentro de un pasillo estrecho.", isSafe: false },
-            { text: "Usar el celular en la cabina del PIV mientras se conduce.", isSafe: false },
+            { text: "Usar el celular en la cabina del Equipo Móvil mientras se conduce.", isSafe: false },
             { text: "Levantar a un peatón en un pallet para que alcance un rack.", isSafe: false }
         ];
 
@@ -381,7 +381,7 @@
         let currentCardData = null;
         let score = 0;
         let lives = 3;
-        let timer = 10000; // 10 segundos
+        let timer = 5000; // 10 segundos
         let timerInterval;
         let isProcessing = false; 
 
@@ -442,7 +442,7 @@
         // =========================================
         function startTimer() {
             clearInterval(timerInterval);
-            timer = 10000;
+            timer = 5000;
             timerBar.style.width = '100%';
             timerBar.className = 'timer-bar'; 
 
@@ -450,7 +450,7 @@
 
             timerInterval = setInterval(() => {
                 timer -= tickRate;
-                const percentage = (timer / 10000) * 100;
+                const percentage = (timer / 5000) * 100;
                 timerBar.style.width = percentage + '%';
 
                 if (percentage < 50 && percentage > 20) timerBar.className = 'timer-bar warning';
