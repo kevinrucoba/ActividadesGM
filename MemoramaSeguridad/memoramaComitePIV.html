@@ -441,7 +441,7 @@
         // =========================================
         function startTimer() {
             clearInterval(timerInterval);
-            timeLeft = 300; // Reinicia a 5 mins
+            timeLeft = 60; // Reinicia a 5 mins
             updateTimerDisplay();
 
             timerInterval = setInterval(() => {
@@ -473,7 +473,7 @@
             document.getElementById('success-modal').classList.remove('active');
 
             clearInterval(timerInterval);
-            timeLeft = 300;
+            timeLeft = 60;
             updateTimerDisplay();
 
             flippedCards = [];
